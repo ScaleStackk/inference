@@ -1,0 +1,28 @@
+services:
+  inference-lb:
+    image: "${LOAD_BALANCER_IMAGE:-questacase-inference-lb:3.4.7}"
+    platform: "${DOCKER_PLATFORM:-linux/amd64}"
+    container_name: questacase-inference-lb
+    restart: unless-stopped
+    environment:
+      INFERENCE_NODES: "${INFERENCE_NODES:?Set INFERENCE_NODES to private-host:port entries}"
+      INFERENCE_MAX_CONNECTIONS: "${INFERENCE_MAX_CONNECTIONS:-1}"
+    ports:
+      - "${LOAD_BALANCER_BIND_ADDRESS:-127.0.0.1}:${LOAD_BALANCER_PORT:-11435}:11434"
+    networks:
+      questacase:
+        aliases:
+          - inference
+    healthcheck:
+      test: ["CMD", "haproxy", "-c", "-f", "/tmp/questacase-haproxy/haproxy.cfg"]
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    mem_limit: "${LOAD_BALANCER_MEMORY_LIMIT:-256m}"
+    cpus: "${LOAD_BALANCER_CPU_LIMIT:-0.5}"
+
+networks:
+  questacase:
+    external: true
+    name: "${DOCKER_NETWORK:-questacase}"

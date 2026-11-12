@@ -1,0 +1,22 @@
+services:
+  inference:
+    image: "${INFERENCE_IMAGE:-questacase-inference:qwen3-4b}"
+    platform: "${DOCKER_PLATFORM:-linux/amd64}"
+    container_name: questacase-inference
+    restart: unless-stopped
+    environment:
+      OLLAMA_HOST: "0.0.0.0:11434"
+      OLLAMA_CONTEXT_LENGTH: "${OLLAMA_CONTEXT_LENGTH:-16384}"
+      OLLAMA_NUM_PARALLEL: "${OLLAMA_NUM_PARALLEL:-1}"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_KEEP_ALIVE: "${OLLAMA_KEEP_ALIVE:-24h}"
+    ports:
+      - "${INFERENCE_BIND_ADDRESS:-0.0.0.0}:${INFERENCE_PORT:-11434}:11434"
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 10s
+      start_period: 30s
+      retries: 6
+    mem_limit: "${INFERENCE_MEMORY_LIMIT:-8g}"
+    cpus: "${INFERENCE_CPU_LIMIT:-4.0}"

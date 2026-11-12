@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+README.md
+compose.*.yaml
+build.sh
+run-*.sh
+*.tar
+*.log
