@@ -1,6 +1,0 @@
-.env
-.env.*
-!.env.example
-*.tar
-*.log
-.DS_Store

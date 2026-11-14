@@ -27,7 +27,7 @@ build_inference() {
     --build-arg "OLLAMA_VERSION=$ollama_version" \
     --build-arg "OLLAMA_MODEL=$ollama_model" \
     --tag "$inference_image" \
-    inference
+    runtime
 }
 
 build_load_balancer() {
