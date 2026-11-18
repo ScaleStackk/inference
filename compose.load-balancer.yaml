@@ -7,6 +7,7 @@ services:
     environment:
       INFERENCE_NODES: "${INFERENCE_NODES:?Set INFERENCE_NODES to private-host:port entries}"
       INFERENCE_MAX_CONNECTIONS: "${INFERENCE_MAX_CONNECTIONS:-1}"
+      INFERENCE_TLS_CA_FILE: "${INFERENCE_TLS_CA_FILE:-/etc/ssl/certs/ca-certificates.crt}"
     ports:
       - "${LOAD_BALANCER_BIND_ADDRESS:-127.0.0.1}:${LOAD_BALANCER_PORT:-11435}:11434"
     networks:

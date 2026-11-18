@@ -110,9 +110,21 @@ Set the comma-separated private endpoints in `.env`:
 INFERENCE_NODES=10.0.2.10:11434,10.0.3.10:11434,10.0.4.10:11434
 ```
 
+For a public inference origin that terminates TLS, provide its HTTPS base URL
+without an API path:
+
+```bash
+INFERENCE_NODES=https://34-130-239-166.sslip.io
+```
+
+HTTPS mode verifies the server certificate, supplies TLS SNI, rewrites the
+upstream `Host` header and checks `/api/tags`. It currently accepts one HTTPS
+origin. Plain HTTP mode continues to support multiple comma-separated nodes.
+
 Then run:
 
 ```bash
+./build.sh load-balancer
 ./run-load-balancer.sh
 curl http://127.0.0.1:11435/api/tags
 ```

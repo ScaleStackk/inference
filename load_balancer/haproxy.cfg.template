@@ -12,8 +12,8 @@ defaults
     timeout http-request 15s
     timeout connect 5s
     timeout queue 10m
-    timeout client 10m
-    timeout server 10m
+    timeout client 30m
+    timeout server 30m
     timeout tunnel 10m
 
 frontend ollama_api
@@ -28,8 +28,6 @@ listen statistics
 
 backend ollama_nodes
     balance leastconn
-    option httpchk
-    http-check send meth GET uri /api/tags ver HTTP/1.1 hdr Host localhost
-    http-check expect status 200
     http-reuse safe
-    # Backend server lines are generated from INFERENCE_NODES at startup.
+    # Health checks, optional TLS settings and server lines are generated from
+    # INFERENCE_NODES at startup.
