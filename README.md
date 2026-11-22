@@ -31,6 +31,22 @@ Docker networks exist only on one Docker host. Therefore the remote inference
 containers are linked with their EC2 private IP addresses or private DNS names,
 not with Docker container names.
 
+```mermaid
+flowchart LR
+  API[Web API] -->|http://inference:11434| LB[HAProxy load balancer]
+  LB -->|health check: GET /api/tags| A[Ollama node A]
+  LB --> B[Ollama node B]
+  LB --> C[Ollama node C]
+  A --> Model[Qwen model baked into image]
+  B --> Model
+  C --> Model
+```
+
+The API uses the Docker alias `inference`; HAProxy routes to the configured
+`INFERENCE_NODES` list. Nodes are removed from rotation when `/api/tags` checks
+fail. Plain HTTP mode supports multiple nodes; HTTPS-origin mode currently
+supports one origin.
+
 ## Inference nodes owned by different AWS accounts
 
 Different IAM users in the same AWS account and VPC need no special networking.
